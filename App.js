@@ -6,9 +6,9 @@ import { Button } from './components/button'
 import { CircleButton } from './components/circle-button'
 import { EmojiList } from './components/emoji-list'
 import { EmojiPicker, useDisclosure } from './components/emoji-picker'
+import { EmojiSticker } from './components/emoji-sticker'
 import { IconButton } from './components/icon-button'
 import { ImageViewer } from './components/image-viewer'
-
 const PlaceholderImage = require('./assets/images/background-image.png')
 
 export default function App() {
@@ -18,6 +18,8 @@ export default function App() {
   const [showAppOptions, setShowAppOptions] = useState(false)
   const onReset = () => {
     setShowAppOptions(false)
+    setSelectedImage(null)
+    setPickedEmoji(null)
   }
 
   const onAddSticker = () => {
@@ -44,6 +46,9 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer source={selectedImage ?? PlaceholderImage} />
+        {pickedEmoji && (
+          <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
+        )}
       </View>
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
