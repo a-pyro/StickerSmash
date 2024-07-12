@@ -2,6 +2,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Button } from './components/button'
 import { CircleButton } from './components/circle-button'
 import { EmojiList } from './components/emoji-list'
@@ -43,7 +44,7 @@ export default function App() {
     }
   }
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer source={selectedImage ?? PlaceholderImage} />
         {pickedEmoji && (
@@ -84,7 +85,7 @@ export default function App() {
         />
       </EmojiPicker>
       <StatusBar style='auto' />
-    </View>
+    </GestureHandlerRootView>
   )
 }
 
