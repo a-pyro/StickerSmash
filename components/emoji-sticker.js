@@ -1,14 +1,35 @@
 import React from 'react'
+import { Dimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+const { width, height } = Dimensions.get('screen')
 
 export const EmojiSticker = ({ stickerSource, imageSize }) => {
   const translateX = useSharedValue(0)
   const translateY = useSharedValue(0)
+  const scale = useSharedValue(1)
+  const startScale = useSharedValue(0)
+
+  const pinch = Gesture.Pinch()
+    .onStart(() => {
+      startScale.value = scale.value
+    })
+    .onUpdate((event) => {
+      scale.value = clamp(
+        startScale.value * event.scale,
+        0.5,
+        Math.min(width / 100, height / 100)
+      )
+    })
+    .runOnJS(true)
+
+  const boxAnimatedStyles = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
 
   const viewStyle = useAnimatedStyle(() => {
     return {
@@ -42,16 +63,26 @@ export const EmojiSticker = ({ stickerSource, imageSize }) => {
   })
 
   return (
-    <GestureDetector gesture={drag}>
-      <Animated.View style={[viewStyle, { top: -350 }]}>
-        <GestureDetector gesture={doubleTap}>
-          <Animated.Image
-            source={stickerSource}
-            resizeMode='contain'
-            style={[imageStyle, { width: imageSize, height: imageSize }]}
-          />
-        </GestureDetector>
-      </Animated.View>
+    <GestureDetector gesture={pinch}>
+      <GestureDetector gesture={drag}>
+        <Animated.View style={[viewStyle, { top: -350 }]}>
+          <GestureDetector gesture={doubleTap}>
+            <Animated.Image
+              source={stickerSource}
+              resizeMode='contain'
+              style={[
+                imageStyle,
+                { width: imageSize, height: imageSize },
+                boxAnimatedStyles,
+              ]}
+            />
+          </GestureDetector>
+        </Animated.View>
+      </GestureDetector>
     </GestureDetector>
   )
+}
+
+function clamp(val, min, max) {
+  return Math.min(Math.max(val, min), max)
 }
