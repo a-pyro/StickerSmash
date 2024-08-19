@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -65,19 +65,21 @@ export const EmojiSticker = ({ stickerSource, imageSize }) => {
   return (
     <GestureDetector gesture={pinch}>
       <GestureDetector gesture={drag}>
-        <Animated.View style={[viewStyle, { top: -350 }]}>
-          <GestureDetector gesture={doubleTap}>
-            <Animated.Image
-              source={stickerSource}
-              resizeMode='contain'
-              style={[
-                imageStyle,
-                { width: imageSize, height: imageSize },
-                boxAnimatedStyles,
-              ]}
-            />
-          </GestureDetector>
-        </Animated.View>
+        <View style={{ height, width }}>
+          <Animated.View style={[viewStyle, { top: -350 }]}>
+            <GestureDetector gesture={doubleTap}>
+              <Animated.Image
+                source={stickerSource}
+                resizeMode='contain'
+                style={[
+                  imageStyle,
+                  { width: imageSize, height: imageSize },
+                  boxAnimatedStyles,
+                ]}
+              />
+            </GestureDetector>
+          </Animated.View>
+        </View>
       </GestureDetector>
     </GestureDetector>
   )
